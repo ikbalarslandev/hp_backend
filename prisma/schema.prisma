@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum EVibe {
+  Historical
+  Budget
+  Couple_Friendly
+  Family_Friendly
+  Luxury
+}
+
+enum EAmenities {
+  Turkish_Bath
+  Shower
+  Sauna
+  Steam_Room
+  Jacuzzi
+  Pool  
+  Shock_Pool
+}
+
+model Property {
+  id    String @id @default(uuid())
+  title String
+
+  phone        String
+  locationLink String
+  adress       String
+
+  adultPrice Float
+  childPrice Float
+  scrubPrice Float
+
+  vibe      EVibe
+  days       Day[]
+  amenities EAmenities[]
+
+  photos String[] 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum EDays {
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+  Sunday
+}
+
+
+model Day {
+  id        String @id @default(uuid())
+  day       EDays
+  openTime  String
+  closeTime String
+  sex       Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  belongsToId String
+  belongsTo   Property @relation(fields: [belongsToId], references: [id])
+}
