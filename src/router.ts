@@ -32,7 +32,24 @@ router.get("/property", async (req, res) => {
   return res.json(result);
 });
 
-router.get("/property/:id", (req, res) => {});
+router.get("/property/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const property = await prisma.property.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    return res.json(property);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: "Property not found or an error occurred" });
+  }
+});
+
 router.put("/property/:id", (req, res) => {});
 router.post("/property", (req, res) => {});
 router.delete("/property/:id", (req, res) => {});
