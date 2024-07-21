@@ -13,7 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 enum EVibe {
   Historical
   Budget
@@ -28,27 +27,25 @@ enum EAmenities {
   Sauna
   Steam_Room
   Jacuzzi
-  Pool  
+  Pool
   Shock_Pool
 }
 
 model Property {
-  id    String @id @default(uuid())
+  id    String @id @unique @default(uuid())
   title String
 
-  phone        String
-  locationLink String
-  adress       String
+  contact   Contact? @relation(fields: [contactId], references: [id])
+  contactId String?
 
-  adultPrice Float
-  childPrice Float
-  scrubPrice Float
+  price   Price?  @relation(fields: [priceId], references: [id])
+  priceId String?
 
   vibe      EVibe
-  days       Day[]
+  days      Day[]
   amenities EAmenities[]
 
-  photos String[] 
+  photos String[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -64,7 +61,6 @@ enum EDays {
   Sunday
 }
 
-
 model Day {
   id        String @id @default(uuid())
   day       EDays
@@ -77,4 +73,28 @@ model Day {
 
   belongsToId String
   belongsTo   Property @relation(fields: [belongsToId], references: [id])
+}
+
+model Contact {
+  id       String @id @default(uuid())
+  phone    String
+  city     String
+  district String
+  address   String
+  location String
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Property  Property[]
+}
+
+model Price {
+  id    String @id @default(uuid())
+  adult Float
+  child Float
+  scrub Float
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Property  Property[]
 }
