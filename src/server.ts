@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Express } from "express";
 import router from "./router";
 
 // its a middleware for logging the request
@@ -6,7 +6,7 @@ import morgan from "morgan";
 import cors from "cors";
 import { protect } from "./modules/auth";
 
-const app = express();
+const app: Express = express();
 
 // this one allows us to make requests from the client to the server
 app.use(cors());
