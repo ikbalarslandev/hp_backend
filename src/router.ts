@@ -5,7 +5,7 @@ import {
   createProperty,
 } from "./handlers/property";
 
-const router = Router();
+const router: Router = Router();
 
 router.get("/property", getAllProperties);
 router.get("/property/:id", getPropertyById);
