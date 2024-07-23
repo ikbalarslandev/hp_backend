@@ -4,8 +4,8 @@ import prisma from "../db";
 const getAllProperties = async (req, res) => {
   const { page, limit, ...filters } = req.query;
 
-  const pageNumber = parseInt(page as string) || 1;
-  const limitNumber = parseInt(limit as string) || 2;
+  const pageNumber = parseInt(page) || 1;
+  const limitNumber = parseInt(limit) || 2;
 
   const startIndex = (pageNumber - 1) * limitNumber;
   const endIndex = pageNumber * limitNumber;
@@ -18,15 +18,37 @@ const getAllProperties = async (req, res) => {
     });
   });
 
-  const data = filteredProperties.slice(startIndex, endIndex);
+  const data: any = filteredProperties.slice(startIndex, endIndex);
+
+  const propertiesWithDetails = await Promise.all(
+    data.map(async (property) => {
+      const contactInfo = await prisma.contact.findUnique({
+        where: {
+          id: property.contactId,
+        },
+      });
+      const priceInfo = await prisma.price.findUnique({
+        where: {
+          id: property.priceId,
+        },
+      });
+      property.contact = contactInfo;
+      property.price = priceInfo;
+      // Remove contactId and priceId from the property object
+      delete property.contactId;
+      delete property.priceId;
+      return property;
+    })
+  );
 
   const result = {
     all_items: filteredProperties.length,
     page: pageNumber,
     max_page: Math.ceil(filteredProperties.length / limitNumber),
     limit: limitNumber,
-    data,
+    data: propertiesWithDetails,
   };
+
   return res.json(result);
 };
 
