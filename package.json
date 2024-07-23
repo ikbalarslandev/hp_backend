@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.17.0",
+    "@prisma/client": "^4.4.0",
     "bcrypt": "^5.1.1",
     "compose-middleware": "^5.0.1",
     "cors": "^2.8.5",
