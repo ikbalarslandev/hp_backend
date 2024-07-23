@@ -10,43 +10,33 @@ const getAllProperties = async (req, res) => {
   const startIndex = (pageNumber - 1) * limitNumber;
   const endIndex = pageNumber * limitNumber;
 
-  const properties = await prisma.property.findMany();
+  const properties = await prisma.property.findMany({
+    include: {
+      contact: true,
+      price: true,
+      days: true,
+    },
+  });
 
   const filteredProperties = properties.filter((property) => {
     return Object.keys(filters).every((filter) => {
+      if (filter.includes("_")) {
+        const [key, subKey] = filter.split("_");
+        return property[key][subKey] === filters[filter];
+      }
+
       return property[filter] === filters[filter];
     });
   });
 
-  const data: any = filteredProperties.slice(startIndex, endIndex);
-
-  const propertiesWithDetails = await Promise.all(
-    data.map(async (property) => {
-      const contactInfo = await prisma.contact.findUnique({
-        where: {
-          id: property.contactId,
-        },
-      });
-      const priceInfo = await prisma.price.findUnique({
-        where: {
-          id: property.priceId,
-        },
-      });
-      property.contact = contactInfo;
-      property.price = priceInfo;
-      // Remove contactId and priceId from the property object
-      delete property.contactId;
-      delete property.priceId;
-      return property;
-    })
-  );
+  const data = filteredProperties.slice(startIndex, endIndex);
 
   const result = {
     all_items: filteredProperties.length,
     page: pageNumber,
     max_page: Math.ceil(filteredProperties.length / limitNumber),
     limit: limitNumber,
-    data: propertiesWithDetails,
+    data,
   };
 
   return res.json(result);
@@ -84,10 +74,10 @@ const createProperty = async (req, res) => {
           create: days,
         },
         contact: {
-          create: contact, // Create related Contact record
+          create: contact,
         },
         price: {
-          create: price, // Create related Price record
+          create: price,
         },
       },
     });
