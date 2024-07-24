@@ -46,6 +46,7 @@ model Property {
   amenities EAmenities[]
 
   photos String[]
+  sex   Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -97,4 +98,10 @@ model Price {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   Property  Property[]
+}
+
+model Province{
+  id String @id @default(uuid())
+  city String @unique
+  districts String[]
 }
