@@ -86,7 +86,7 @@ const createProperty = async (req, res) => {
 
     return res.json(property);
   } catch (error) {
-    console.error(error); // Log the error for debugging
+    console.error(error);
     return res.status(500).json({ error: error.message });
   }
 };
