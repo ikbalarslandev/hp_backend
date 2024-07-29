@@ -50,6 +50,11 @@ const getPropertyByTitle = async (req, res) => {
       where: {
         title,
       },
+      include: {
+        contact: true,
+        price: true,
+        days: true,
+      },
     });
 
     return res.json(property);
