@@ -42,7 +42,7 @@ const getAllProperties = async (req, res) => {
 };
 
 const getPropertyByTitle = async (req, res) => {
-  let { title } = req.params;
+  let { title }: { title: string } = req.params;
   title = title.replace(/-/g, " ");
 
   try {
