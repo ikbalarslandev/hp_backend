@@ -46,7 +46,7 @@ const getPropertyByTitle = async (req, res) => {
   title = title.replace(/-/g, " ");
 
   try {
-    const property = await prisma.property.findUnique({
+    const property = await prisma.property.findFirst({
       where: {
         title,
       },
