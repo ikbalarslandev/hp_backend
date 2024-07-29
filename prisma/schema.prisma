@@ -83,7 +83,7 @@ model Contact {
   city     String
   district String
   address   String
-  location String
+  location  Float[]
 
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
