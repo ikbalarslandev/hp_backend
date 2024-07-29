@@ -29,11 +29,12 @@ enum EAmenities {
   Jacuzzi
   Pool
   Shock_Pool
+  Spa
 }
 
 model Property {
   id    String @id @unique @default(uuid())
-  title String
+  title String @unique
 
   contact   Contact? @relation(fields: [contactId], references: [id])
   contactId String?

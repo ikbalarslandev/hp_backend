@@ -1,4 +1,3 @@
-import { PrismaClient } from "@prisma/client";
 import prisma from "../db";
 
 const getAllProperties = async (req, res) => {
@@ -42,13 +41,14 @@ const getAllProperties = async (req, res) => {
   return res.json(result);
 };
 
-const getPropertyById = async (req, res) => {
-  const { id } = req.params;
+const getPropertyByTitle = async (req, res) => {
+  let { title } = req.params;
+  title = title.replace(/-/g, " ");
 
   try {
     const property = await prisma.property.findUnique({
       where: {
-        id,
+        title,
       },
     });
 
@@ -91,4 +91,4 @@ const createProperty = async (req, res) => {
   }
 };
 
-export { getAllProperties, getPropertyById, createProperty };
+export { getAllProperties, getPropertyByTitle, createProperty };
