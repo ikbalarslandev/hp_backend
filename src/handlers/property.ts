@@ -1,7 +1,7 @@
 import prisma from "../db";
 
 const getAllProperties = async (req, res) => {
-  const { page, limit, ...filters } = req.query;
+  const { page, limit, sort, ...filters } = req.query;
 
   const pageNumber = parseInt(page) || 1;
   const limitNumber = parseInt(limit) || 5;
@@ -28,7 +28,22 @@ const getAllProperties = async (req, res) => {
     });
   });
 
-  const data = filteredProperties.slice(startIndex, endIndex);
+  const sortedProperties = filteredProperties.sort((a, b) => {
+    const priceA = a.price.adult;
+    const priceB = b.price.adult;
+
+    if (sort === "to-cheap") {
+      return priceA - priceB;
+    }
+
+    if (sort === "to-expensive") {
+      return priceB - priceA;
+    }
+
+    return 0;
+  });
+
+  const data = sortedProperties.slice(startIndex, endIndex);
 
   const result = {
     all_items: filteredProperties.length,
