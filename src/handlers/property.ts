@@ -67,8 +67,17 @@ const getPropertyByTitle = async (req, res) => {
 };
 
 const createProperty = async (req, res) => {
-  const { title, vibe, amenities, photos, days, contact, price, sex } =
-    req.body;
+  const {
+    title,
+    vibe,
+    amenities,
+    photos,
+    days,
+    contact,
+    price,
+    sex,
+    products,
+  } = req.body;
 
   try {
     const property = await prisma.property.create({
@@ -86,6 +95,9 @@ const createProperty = async (req, res) => {
         },
         price: {
           create: price,
+        },
+        products: {
+          create: products,
         },
       },
     });

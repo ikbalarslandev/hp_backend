@@ -47,7 +47,7 @@ model Property {
   amenities EAmenities[]
   products   Product[]
 
-  photos String[]
+  photos BigInt[]
   sex    Int
 
   createdAt DateTime  @default(now())
