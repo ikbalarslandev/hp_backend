@@ -45,12 +45,13 @@ model Property {
   vibe      EVibe
   days      Day[]
   amenities EAmenities[]
+  products   Product[]
 
   photos String[]
-  sex   Int
+  sex    Int
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 enum EDays {
@@ -78,12 +79,12 @@ model Day {
 }
 
 model Contact {
-  id       String @id @default(uuid())
+  id       String  @id @default(uuid())
   phone    String
   city     String
   district String
-  address   String
-  location  Float[]
+  address  String
+  location Float[]
 
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -101,8 +102,20 @@ model Price {
   Property  Property[]
 }
 
-model Province{
-  id String @id @default(uuid())
-  city String @unique
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  price       Float
+  details     String[]
+  tags        String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  belongsToId String
+  belongsTo   Property @relation(fields: [belongsToId], references: [id])
+}
+
+model Province {
+  id        String   @id @default(uuid())
+  city      String   @unique
   districts String[]
 }
