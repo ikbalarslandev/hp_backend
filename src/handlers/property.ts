@@ -4,7 +4,7 @@ const getAllProperties = async (req, res) => {
   const { page, limit, ...filters } = req.query;
 
   const pageNumber = parseInt(page) || 1;
-  const limitNumber = parseInt(limit) || 2;
+  const limitNumber = parseInt(limit) || 5;
 
   const startIndex = (pageNumber - 1) * limitNumber;
   const endIndex = pageNumber * limitNumber;
@@ -80,6 +80,27 @@ const createProperty = async (req, res) => {
   } = req.body;
 
   try {
+    // Create Contact record
+    const contactRecord = await prisma.contact.create({
+      data: {
+        phone: contact.phone,
+        city: contact.city,
+        district: contact.district,
+        address: contact.address,
+        location: contact.location,
+      },
+    });
+
+    // Create Price record
+    const priceRecord = await prisma.price.create({
+      data: {
+        adult: price.adult,
+        child: price.child,
+        scrub: price.scrub,
+      },
+    });
+
+    // Create Property record with references to Contact and Price records
     const property = await prisma.property.create({
       data: {
         title,
@@ -90,12 +111,8 @@ const createProperty = async (req, res) => {
         days: {
           create: days,
         },
-        contact: {
-          create: contact,
-        },
-        price: {
-          create: price,
-        },
+        contactId: contactRecord.id, // Use the ID of the created contact
+        priceId: priceRecord.id, // Use the ID of the created price
         products: {
           create: products,
         },
