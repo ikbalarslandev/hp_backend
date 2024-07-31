@@ -32,11 +32,11 @@ const getAllProperties = async (req, res) => {
     const priceA = a.price.adult;
     const priceB = b.price.adult;
 
-    if (sort === "to-expensive") {
+    if (sort === "cheap") {
       return priceA - priceB;
     }
 
-    if (sort === "to-cheap") {
+    if (sort === "expensive") {
       return priceB - priceA;
     }
 
