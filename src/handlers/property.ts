@@ -54,6 +54,7 @@ const getPropertyByTitle = async (req, res) => {
         contact: true,
         price: true,
         days: true,
+        products: true,
       },
     });
 
