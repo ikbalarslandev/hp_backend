@@ -104,9 +104,11 @@ model Price {
 
 model Product {
   id          String   @id @default(uuid())
-  name        String
+  name_tr        String
+  name_en        String
   price       Float
-  details     String[]
+  details_tr     String[]
+  details_en     String[]
   tags        String[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
