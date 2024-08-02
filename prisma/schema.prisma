@@ -13,13 +13,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum EVibe {
-  Historical
-  Budget
-  Couple_Friendly
-  Family_Friendly
-  Luxury
-}
+// enum EVibe {
+//   Historical  === 0
+//   Budget     === 1
+//   Couple_Friendly  === 2
+//   Family_Friendly  === 3
+//   Luxury   === 4
+// }
+
+
 
 enum EAmenities {
   Turkish_Bath
@@ -42,7 +44,7 @@ model Property {
   price   Price?  @relation(fields: [priceId], references: [id])
   priceId String?
 
-  vibe      EVibe
+  vibe      Int
   days      Day[]
   amenities EAmenities[]
   products   Product[]
