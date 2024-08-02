@@ -23,16 +23,16 @@ datasource db {
 
 
 
-enum EAmenities {
-  Turkish_Bath
-  Shower
-  Sauna
-  Steam_Room
-  Jacuzzi
-  Pool
-  Shock_Pool
-  Spa
-}
+// enum EAmenities {
+//   Turkish_Bath === 0
+//   Shower   === 1
+//   Sauna    === 2
+//   Steam_Room  === 3
+//   Jacuzzi     === 4 
+//   Pool       === 5
+//   Shock_Pool   === 6
+//   Spa      === 7
+// }
 
 model Property {
   id    String @id @unique @default(uuid())
@@ -46,7 +46,7 @@ model Property {
 
   vibe      Int
   days      Day[]
-  amenities EAmenities[]
+  amenities Int[]
   products   Product[]
 
   photos BigInt[]
