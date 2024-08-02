@@ -1,7 +1,7 @@
 import prisma from "../db";
 
 const getAllProperties = async (req, res) => {
-  const { page, limit, sort, vibe, ...filters } = req.query;
+  const { page, limit, sort, vibe, amenity, ...filters } = req.query;
 
   const pageNumber = parseInt(page) || 1;
   const limitNumber = parseInt(limit) || 5;
@@ -36,7 +36,17 @@ const getAllProperties = async (req, res) => {
     return true;
   });
 
-  const sortedProperties = vibeProperties.sort((a, b) => {
+  const amenityProperties = vibeProperties.filter((property) => {
+    const parsedAmenity = amenity && JSON.parse(amenity);
+    if (parsedAmenity) {
+      return parsedAmenity.every((amenity) => {
+        return property.amenities.includes(amenity);
+      });
+    }
+    return true;
+  });
+
+  const sortedProperties = amenityProperties.sort((a, b) => {
     const priceA = a.price.adult;
     const priceB = b.price.adult;
 
