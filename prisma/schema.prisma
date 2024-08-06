@@ -121,7 +121,7 @@ model Product {
 model Review {
   id          String   @id @default(uuid())
   name        String
-  email       String  @unique
+  email       String  
   img         String
   rate        Int
   comment     String

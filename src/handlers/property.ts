@@ -180,4 +180,27 @@ const createReview = async (req, res) => {
   }
 };
 
-export { getAllProperties, getPropertyByTitle, createProperty, createReview };
+const isExist = async (req, res) => {
+  const { email, propertyId } = req.body;
+  try {
+    const review = await prisma.review.findFirst({
+      where: {
+        email,
+        belongsToId: propertyId,
+      },
+    });
+
+    return res.json({ isExist: !!review });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export {
+  getAllProperties,
+  getPropertyByTitle,
+  createProperty,
+  createReview,
+  isExist,
+};
