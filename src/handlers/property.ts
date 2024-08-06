@@ -159,4 +159,25 @@ const createProperty = async (req, res) => {
   }
 };
 
-export { getAllProperties, getPropertyByTitle, createProperty };
+const createReview = async (req, res) => {
+  const { propertyId, name, email, img, rate, comment } = req.body;
+  try {
+    const review = await prisma.review.create({
+      data: {
+        name,
+        email,
+        img,
+        rate,
+        comment,
+        belongsToId: propertyId,
+      },
+    });
+
+    return res.json(review);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export { getAllProperties, getPropertyByTitle, createProperty, createReview };

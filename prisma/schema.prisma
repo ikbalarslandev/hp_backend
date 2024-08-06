@@ -21,8 +21,6 @@ datasource db {
 //   Luxury   === 4
 // }
 
-
-
 // enum EAmenities {
 //   Turkish_Bath === 0
 //   Shower   === 1
@@ -47,13 +45,15 @@ model Property {
   vibe      Int
   days      Day[]
   amenities Int[]
-  products   Product[]
+  products  Product[]
+  reviews   Review[]
 
-  photos BigInt[]
+  photos String[]
   sex    Int
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
 }
 
 enum EDays {
@@ -106,11 +106,11 @@ model Price {
 
 model Product {
   id          String   @id @default(uuid())
-  name_tr        String
-  name_en        String
+  name_tr     String
+  name_en     String
   price       Float
-  details_tr     String[]
-  details_en     String[]
+  details_tr  String[]
+  details_en  String[]
   tags        String[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -118,8 +118,15 @@ model Product {
   belongsTo   Property @relation(fields: [belongsToId], references: [id])
 }
 
-model Province {
-  id        String   @id @default(uuid())
-  city      String   @unique
-  districts String[]
+model Review {
+  id          String   @id @default(uuid())
+  name        String
+  email       String  @unique
+  img         String
+  rate        Int
+  comment     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  belongsToId String
+  belongsTo   Property @relation(fields: [belongsToId], references: [id])
 }
