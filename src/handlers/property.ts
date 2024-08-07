@@ -181,7 +181,7 @@ const createReview = async (req, res) => {
 };
 
 const isExist = async (req, res) => {
-  const { email, propertyId } = req.body;
+  const { email, propertyId } = req.query;
   try {
     const review = await prisma.review.findFirst({
       where: {
