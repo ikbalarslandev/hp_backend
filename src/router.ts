@@ -3,9 +3,8 @@ import {
   getAllProperties,
   getPropertyByTitle,
   createProperty,
-  createReview,
-  isExist,
 } from "./handlers/property";
+import { createReview, isExist } from "./handlers/review";
 
 const router: Router = Router();
 

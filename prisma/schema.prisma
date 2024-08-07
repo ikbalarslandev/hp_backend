@@ -33,8 +33,9 @@ datasource db {
 // }
 
 model Property {
-  id    String @id @unique @default(uuid())
-  title String @unique
+  id      String  @id @unique @default(uuid())
+  adminId String?
+  title   String  @unique
 
   contact   Contact? @relation(fields: [contactId], references: [id])
   contactId String?
@@ -42,18 +43,21 @@ model Property {
   price   Price?  @relation(fields: [priceId], references: [id])
   priceId String?
 
+  rating   Rating? @relation(fields: [ratingId], references: [id])
+  ratingId String?
+
   vibe      Int
   days      Day[]
   amenities Int[]
   products  Product[]
   reviews   Review[]
 
-  photos String[]
-  sex    Int
+  photos     String[]
+  sex        Int
+ 
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
 }
 
 enum EDays {
@@ -93,6 +97,16 @@ model Contact {
   Property  Property[]
 }
 
+model Rating {
+  id    String @id @default(uuid())
+  sum   Float
+  count Int
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Property  Property[]
+}
+
 model Price {
   id    String @id @default(uuid())
   adult Float
@@ -121,7 +135,7 @@ model Product {
 model Review {
   id          String   @id @default(uuid())
   name        String
-  email       String  
+  email       String
   img         String
   rate        Int
   comment     String
