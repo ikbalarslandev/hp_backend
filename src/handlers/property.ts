@@ -15,6 +15,7 @@ const getAllProperties = async (req, res) => {
       price: true,
       days: true,
       rating: true,
+      reviews: true,
     },
   });
 
@@ -90,6 +91,7 @@ const getPropertyByTitle = async (req, res) => {
         days: true,
         products: true,
         rating: true,
+        reviews: true,
       },
     });
 
