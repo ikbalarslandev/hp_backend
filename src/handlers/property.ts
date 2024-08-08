@@ -1,7 +1,7 @@
 import prisma from "../db";
 
 const getAllProperties = async (req, res) => {
-  const { page, limit, sort, vibe, amenity, ...filters } = req.query;
+  const { page, limit, sort, vibe, amenity, sex, ...filters } = req.query;
 
   const pageNumber = parseInt(page) || 1;
   const limitNumber = parseInt(limit) || 5;
@@ -11,11 +11,8 @@ const getAllProperties = async (req, res) => {
 
   const properties = await prisma.property.findMany({
     include: {
-      contact: true,
       price: true,
-      days: true,
       rating: true,
-      reviews: true,
     },
   });
 
@@ -48,7 +45,17 @@ const getAllProperties = async (req, res) => {
     return true;
   });
 
-  const sortedProperties = amenityProperties.sort((a, b) => {
+  const sexProperties = amenityProperties.filter((property) => {
+    const parsedSex = sex && JSON.parse(sex);
+    if (parsedSex) {
+      return parsedSex.every((sex) => {
+        return property.amenities.includes(sex);
+      });
+    }
+    return true;
+  });
+
+  const sortedProperties = sexProperties.sort((a, b) => {
     const priceA = a.price.adult;
     const priceB = b.price.adult;
 
