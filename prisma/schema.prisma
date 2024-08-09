@@ -32,6 +32,12 @@ datasource db {
 //   Ice_Pool   === 7
 // }
 
+// enum Payment_Method {
+// Cash_Only === 0
+// Cash_and_Credit_Cards  === 1
+// Credit_Card_Only === 2
+// }
+
 model Property {
   id      String  @id @unique @default(uuid())
   adminId String?
@@ -54,6 +60,7 @@ model Property {
 
   photos String[]
   sex    Int
+  pay    Int   @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
