@@ -46,11 +46,9 @@ const getAllProperties = async (req, res) => {
   });
 
   const sexProperties = amenityProperties.filter((property) => {
-    const parsedSex = sex && JSON.parse(sex);
-    if (parsedSex) {
-      return parsedSex.every((sex) => {
-        return property.amenities.includes(sex);
-      });
+    const parsedSex = sex ? JSON.parse(sex) : [];
+    if (parsedSex.length > 0) {
+      return parsedSex.includes(property.sex);
     }
     return true;
   });
@@ -73,9 +71,9 @@ const getAllProperties = async (req, res) => {
   const data = sortedProperties.slice(startIndex, endIndex);
 
   const result = {
-    all_items: filteredProperties.length,
+    all_items: sortedProperties.length,
     page: pageNumber,
-    max_page: Math.ceil(filteredProperties.length / limitNumber),
+    max_page: Math.ceil(sortedProperties.length / limitNumber),
     limit: limitNumber,
     data,
   };
