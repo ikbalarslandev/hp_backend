@@ -23,7 +23,7 @@ const getAllProperties = async (req, res) => {
         return property[key][subKey] === filters[filter];
       }
 
-      return property[filter] === filters[filter];
+      return property[filter] == filters[filter];
     });
   });
 
