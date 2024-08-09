@@ -22,14 +22,14 @@ datasource db {
 // }
 
 // enum EAmenities {
-//   Turkish_Bath === 0
-//   Shower   === 1
-//   Sauna    === 2
-//   Steam_Room  === 3
-//   Jacuzzi     === 4 
-//   Pool       === 5
-//   Shock_Pool   === 6
-//   Spa      === 7
+//   Shower   === 0
+//   Sauna    === 1
+//   Steam_Room  === 2
+//   Jacuzzi     === 3
+//   Pool       === 4
+//   Massage    === 5
+//   Ice_Bucket === 6
+//   Ice_Pool   === 7
 // }
 
 model Property {
@@ -52,9 +52,8 @@ model Property {
   products  Product[]
   reviews   Review[]
 
-  photos     String[]
-  sex        Int
- 
+  photos String[]
+  sex    Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
