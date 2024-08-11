@@ -1,7 +1,8 @@
 import prisma from "../db";
 
 const getAllProperties = async (req, res) => {
-  const { page, limit, sort, vibe, amenity, sex, ...filters } = req.query;
+  const { page, limit, sort, vibe, amenity, sex, range, ...filters } =
+    req.query;
 
   const pageNumber = parseInt(page) || 1;
   const limitNumber = parseInt(limit) || 5;
@@ -68,7 +69,15 @@ const getAllProperties = async (req, res) => {
     return 0;
   });
 
-  const data = sortedProperties.slice(startIndex, endIndex);
+  const rangeProperties = sortedProperties.filter((property) => {
+    if (range) {
+      const [min, max] = JSON.parse(range);
+      return property.price.adult >= min && property.price.adult <= max;
+    }
+    return true;
+  });
+
+  const data = rangeProperties.slice(startIndex, endIndex);
 
   const result = {
     all_items: sortedProperties.length,
