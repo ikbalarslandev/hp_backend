@@ -80,9 +80,9 @@ const getAllProperties = async (req, res) => {
   const data = rangeProperties.slice(startIndex, endIndex);
 
   const result = {
-    all_items: sortedProperties.length,
+    all_items: rangeProperties.length,
     page: pageNumber,
-    max_page: Math.ceil(sortedProperties.length / limitNumber),
+    max_page: Math.ceil(rangeProperties.length / limitNumber),
     limit: limitNumber,
     data,
   };
