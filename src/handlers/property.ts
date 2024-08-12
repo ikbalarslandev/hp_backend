@@ -105,7 +105,11 @@ const getPropertyByTitle = async (req, res) => {
         days: true,
         products: true,
         rating: true,
-        reviews: true,
+        reviews: {
+          include: {
+            user: true,
+          },
+        },
       },
     });
 
