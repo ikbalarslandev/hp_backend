@@ -1,16 +1,42 @@
 import prisma from "../db";
 
 const createReview = async (req, res) => {
-  const { propertyId, name, email, img, rate, comment } = req.body;
+  const {
+    type,
+    rate_location,
+    rate_staff,
+    rate_atmosphere,
+    rate_cleanliness,
+    rate_facilities,
+    rate_value_for_money,
+    comment,
+    propertyId,
+    userId,
+  } = req.body;
+
+  const rate_overall =
+    (rate_location +
+      rate_staff +
+      rate_atmosphere +
+      rate_cleanliness +
+      rate_facilities +
+      rate_value_for_money) /
+    6;
+
   try {
     const review = await prisma.review.create({
       data: {
-        name,
-        email,
-        img,
-        rate,
+        type,
+        rate_location,
+        rate_staff,
+        rate_atmosphere,
+        rate_cleanliness,
+        rate_facilities,
+        rate_value_for_money,
+        rate_overall,
         comment,
-        belongsToId: propertyId,
+        propertyId,
+        userId,
       },
     });
 
@@ -24,7 +50,7 @@ const createReview = async (req, res) => {
     if (!property.ratingId) {
       const rating = await prisma.rating.create({
         data: {
-          sum: review.rate,
+          sum: review.rate_overall,
           count: 1,
         },
       });
@@ -49,7 +75,9 @@ const createReview = async (req, res) => {
           id: rating.id,
         },
         data: {
-          sum: (rating.sum * rating.count + review.rate) / (rating.count + 1),
+          sum:
+            (rating.sum * rating.count + review.rate_overall) /
+            (rating.count + 1),
           count: rating.count + 1,
         },
       });
@@ -63,12 +91,12 @@ const createReview = async (req, res) => {
 };
 
 const isExist = async (req, res) => {
-  const { email, propertyId } = req.query;
+  const { propertyId, userId } = req.query;
   try {
     const review = await prisma.review.findFirst({
       where: {
-        email,
-        belongsToId: propertyId,
+        propertyId,
+        userId,
       },
     });
 
