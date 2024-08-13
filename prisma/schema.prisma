@@ -72,7 +72,7 @@ model Property {
   priceId String?
 
   rating   Rating? @relation(fields: [ratingId], references: [id])
-  ratingId String?
+  ratingId String?  @unique
 
   vibe      Int?
   days      Day[]
@@ -127,8 +127,15 @@ model Contact {
 
 model Rating {
   id    String @id @default(uuid())
-  sum   Float
   count Int
+  rate_overall   Float
+
+  rate_location      Float
+  rate_staff         Float
+  rate_atmosphere    Float
+  rate_cleanliness   Float
+  rate_facilities    Float
+  rate_value_for_money Float
 
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -163,15 +170,8 @@ model Product {
 model Review {
   id         String   @id @default(uuid())
   type       Int
-  rate_overall        Float
+  rate       Float
   comment    String
-
-  rate_location       Int
-  rate_staff          Int
-  rate_atmosphere     Int
-  rate_cleanliness    Int
-  rate_facilities     Int
-  rate_value_for_money Int
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

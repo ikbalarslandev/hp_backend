@@ -28,4 +28,23 @@ const getCountryByTld = async (req: Request, res: Response) => {
   }
 };
 
-export { getCountries, getCountryByTld };
+const createCountry = async (req: Request, res: Response) => {
+  const { tld, name_tr, name_en, image } = req.body;
+
+  try {
+    const country = await prisma.country.create({
+      data: {
+        tld,
+        name_tr,
+        name_en,
+        image,
+      },
+    });
+    return res.json(country);
+  } catch (error) {
+    console.error(error);
+    return res.json({ error: "Country not created or an error occurred" });
+  }
+};
+
+export { getCountries, getCountryByTld, createCountry };

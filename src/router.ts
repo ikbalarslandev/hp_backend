@@ -6,7 +6,11 @@ import {
 } from "./handlers/property";
 import { createReview, isExist } from "./handlers/review";
 import { createUser } from "./handlers/user";
-import { getCountries, getCountryByTld } from "./handlers/country";
+import {
+  getCountries,
+  getCountryByTld,
+  createCountry,
+} from "./handlers/country";
 
 const router: Router = Router();
 
@@ -21,5 +25,6 @@ router.post("/user", createUser);
 
 router.get("/country", getCountries);
 router.get("/country/:tld", getCountryByTld);
+router.post("/country", createCountry);
 
 export default router;

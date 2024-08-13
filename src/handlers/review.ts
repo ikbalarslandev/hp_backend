@@ -27,13 +27,7 @@ const createReview = async (req, res) => {
     const review = await prisma.review.create({
       data: {
         type,
-        rate_location,
-        rate_staff,
-        rate_atmosphere,
-        rate_cleanliness,
-        rate_facilities,
-        rate_value_for_money,
-        rate_overall,
+        rate: rate_overall,
         comment,
         propertyId,
         userId,
@@ -50,8 +44,14 @@ const createReview = async (req, res) => {
     if (!property.ratingId) {
       const rating = await prisma.rating.create({
         data: {
-          sum: review.rate_overall,
           count: 1,
+          rate_overall,
+          rate_location,
+          rate_staff,
+          rate_atmosphere,
+          rate_cleanliness,
+          rate_facilities,
+          rate_value_for_money,
         },
       });
       const updatedProperty = await prisma.property.update({
@@ -64,21 +64,32 @@ const createReview = async (req, res) => {
       });
       console.log("updatedProperty", updatedProperty);
     } else {
-      const rating = await prisma.rating.findFirst({
+      const rating = await prisma.rating.findUnique({
         where: {
           id: property.ratingId,
         },
       });
+
+      const calculateAverage = (type: string): number => {
+        const currentRating = rating[type] || 0;
+        const newRating =
+          type == "rate_overall" ? rate_overall : req.body[type] || 0;
+        return (currentRating * rating.count + newRating) / (rating.count + 1);
+      };
 
       await prisma.rating.update({
         where: {
           id: rating.id,
         },
         data: {
-          sum:
-            (rating.sum * rating.count + review.rate_overall) /
-            (rating.count + 1),
           count: rating.count + 1,
+          rate_overall: calculateAverage("rate_overall"),
+          rate_location: calculateAverage("rate_location"),
+          rate_staff: calculateAverage("rate_staff"),
+          rate_atmosphere: calculateAverage("rate_atmosphere"),
+          rate_cleanliness: calculateAverage("rate_cleanliness"),
+          rate_facilities: calculateAverage("rate_facilities"),
+          rate_value_for_money: calculateAverage("rate_value_for_money"),
         },
       });
     }
