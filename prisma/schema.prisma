@@ -83,6 +83,8 @@ model Property {
   photos String[]
   sex    Int
   pay    Int      @default(0)
+  desc_tr String?
+  desc_en String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
