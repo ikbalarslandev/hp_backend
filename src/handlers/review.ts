@@ -3,6 +3,7 @@ import prisma from "../db";
 const createReview = async (req, res) => {
   const {
     type,
+    product_type,
     rate_location,
     rate_staff,
     rate_atmosphere,
@@ -27,6 +28,7 @@ const createReview = async (req, res) => {
     const review = await prisma.review.create({
       data: {
         type,
+        product_type,
         rate: rate_overall,
         comment,
         propertyId,

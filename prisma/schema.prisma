@@ -60,6 +60,11 @@ datasource db {
 // friends === 3
 // }
 
+// enum Porduct_Type{
+  // basic === 0
+  // regular === 1
+// }
+
 model Property {
   id      String  @id @unique @default(uuid())
   adminId String?
@@ -157,12 +162,8 @@ model Price {
 
 model Product {
   id          String   @id @default(uuid())
-  name_tr     String
-  name_en     String
+  type        Int
   price       Float
-  details_tr  String[]
-  details_en  String[]
-  tags        String[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   belongsToId String
@@ -174,6 +175,7 @@ model Review {
   type       Int
   rate       Float
   comment    String
+  product_type Int
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
