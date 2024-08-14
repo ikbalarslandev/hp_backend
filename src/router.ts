@@ -5,7 +5,7 @@ import {
   createProperty,
 } from "./handlers/property";
 import { createReview, isExist } from "./handlers/review";
-import { createUser } from "./handlers/user";
+import { createUser, getUserByEmail } from "./handlers/user";
 import {
   getCountries,
   getCountryByTld,
@@ -22,6 +22,7 @@ router.post("/review", createReview);
 router.get("/review", isExist);
 
 router.post("/user", createUser);
+router.get("/user/:email", getUserByEmail);
 
 router.get("/country", getCountries);
 router.get("/country/:tld", getCountryByTld);
