@@ -14,6 +14,7 @@ const getAllProperties = async (req, res) => {
     include: {
       price: true,
       rating: true,
+      products: true,
     },
   });
 
