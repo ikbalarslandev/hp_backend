@@ -125,7 +125,7 @@ const getReviewsForProperty = async (req, res) => {
   const { page, limit } = req.query;
 
   const pageNumber = parseInt(page) || 1;
-  const limitNumber = parseInt(limit) || 5;
+  const limitNumber = parseInt(limit) || 3;
 
   const startIndex = (pageNumber - 1) * limitNumber;
   const endIndex = pageNumber * limitNumber;
