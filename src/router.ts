@@ -4,13 +4,18 @@ import {
   getPropertyByTitle,
   createProperty,
 } from "./handlers/property";
-import { createReview, isExist } from "./handlers/review";
+import {
+  createReview,
+  isExist,
+  getReviewsForProperty,
+} from "./handlers/review";
 import { createUser, getUserByEmail } from "./handlers/user";
 import {
   getCountries,
   getCountryByTld,
   createCountry,
 } from "./handlers/country";
+import { get } from "http";
 
 const router: Router = Router();
 
@@ -20,6 +25,7 @@ router.post("/property", createProperty);
 
 router.post("/review", createReview);
 router.get("/review", isExist);
+router.get("/review/:propertyId", getReviewsForProperty);
 
 router.post("/user", createUser);
 router.get("/user/:email", getUserByEmail);

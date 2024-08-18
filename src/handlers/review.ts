@@ -120,4 +120,45 @@ const isExist = async (req, res) => {
   }
 };
 
-export { createReview, isExist };
+const getReviewsForProperty = async (req, res) => {
+  const { propertyId } = req.params;
+  const { page, limit } = req.query;
+
+  const pageNumber = parseInt(page) || 1;
+  const limitNumber = parseInt(limit) || 5;
+
+  const startIndex = (pageNumber - 1) * limitNumber;
+  const endIndex = pageNumber * limitNumber;
+
+  try {
+    const reviews = await prisma.review.findMany({
+      where: {
+        propertyId,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    reviews.sort((a, b) => {
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+    });
+
+    const data = reviews.slice(startIndex, endIndex);
+
+    const result = {
+      all_items: reviews.length,
+      page: pageNumber,
+      max_page: Math.ceil(reviews.length / limitNumber),
+      limit: limitNumber,
+      data,
+    };
+
+    return res.json(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export { createReview, isExist, getReviewsForProperty };
