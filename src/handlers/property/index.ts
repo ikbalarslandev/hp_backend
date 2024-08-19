@@ -1,14 +1,26 @@
-import prisma from "../db";
+import prisma from "../../db";
+import {
+  filterByKeys,
+  filterByVibe,
+  filterByAmenity,
+  filterBySex,
+  sortProperties,
+  filterByRange,
+  paginate,
+} from "./pure";
+import { pipe } from "ramda";
 
 const getAllProperties = async (req, res) => {
-  const { page, limit, sort, vibe, amenity, sex, range, ...filters } =
-    req.query;
-
-  const pageNumber = parseInt(page) || 1;
-  const limitNumber = parseInt(limit) || 5;
-
-  const startIndex = (pageNumber - 1) * limitNumber;
-  const endIndex = pageNumber * limitNumber;
+  const {
+    page = 1,
+    limit = 5,
+    sort,
+    vibe,
+    amenity,
+    sex,
+    range,
+    ...filters
+  } = req.query;
 
   const properties = await prisma.property.findMany({
     include: {
@@ -18,73 +30,23 @@ const getAllProperties = async (req, res) => {
     },
   });
 
-  const filteredProperties = properties.filter((property) => {
-    return Object.keys(filters).every((filter) => {
-      if (filter.includes("_")) {
-        const [key, subKey] = filter.split("_");
-        return property[key][subKey] === filters[filter];
-      }
+  const filterAndSortAndPaginate = pipe(
+    filterByKeys(filters),
+    filterByVibe(vibe),
+    filterByAmenity(amenity),
+    filterBySex(sex),
+    sortProperties(sort),
+    filterByRange(range),
+    paginate(page, limit)
+  );
 
-      return property[filter] == filters[filter];
-    });
-  });
-
-  const vibeProperties = filteredProperties.filter((property) => {
-    const parsedVibe = vibe && JSON.parse(vibe);
-    if (parsedVibe) {
-      return parsedVibe.includes(property.vibe);
-    }
-    return true;
-  });
-
-  const amenityProperties = vibeProperties.filter((property) => {
-    const parsedAmenity = amenity && JSON.parse(amenity);
-    if (parsedAmenity) {
-      return parsedAmenity.every((amenity) => {
-        return property.amenities.includes(amenity);
-      });
-    }
-    return true;
-  });
-
-  const sexProperties = amenityProperties.filter((property) => {
-    const parsedSex = sex ? JSON.parse(sex) : [];
-    if (parsedSex.length > 0) {
-      return parsedSex.includes(property.sex);
-    }
-    return true;
-  });
-
-  const sortedProperties = sexProperties.sort((a, b) => {
-    const priceA = a.price.adult;
-    const priceB = b.price.adult;
-
-    if (sort === "cheap") {
-      return priceA - priceB;
-    }
-
-    if (sort === "expensive") {
-      return priceB - priceA;
-    }
-
-    return 0;
-  });
-
-  const rangeProperties = sortedProperties.filter((property) => {
-    if (range) {
-      const [min, max] = JSON.parse(range);
-      return property.price.adult >= min && property.price.adult <= max;
-    }
-    return true;
-  });
-
-  const data = rangeProperties.slice(startIndex, endIndex);
+  const data = filterAndSortAndPaginate(properties);
 
   const result = {
-    all_items: rangeProperties.length,
-    page: pageNumber,
-    max_page: Math.ceil(rangeProperties.length / limitNumber),
-    limit: limitNumber,
+    all_items: data.length,
+    page: parseInt(page),
+    max_page: Math.ceil(properties.length / limit),
+    limit: parseInt(limit),
     data,
   };
 

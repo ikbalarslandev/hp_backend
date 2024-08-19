@@ -15,7 +15,6 @@ import {
   getCountryByTld,
   createCountry,
 } from "./handlers/country";
-import { get } from "http";
 
 const router: Router = Router();
 
